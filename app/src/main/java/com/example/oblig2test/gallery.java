@@ -1,11 +1,15 @@
 package com.example.oblig2test;
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,11 +31,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class gallery extends AppCompatActivity {
 
         private PictureViewModel pictureViewModel;
         private RecyclerView recyclerView;
         private ImageAdapter imageAdapter;
+
+        private Context context;
+
+    final String[] imageNames = {"cat", "dog", "turkey"};
 
     private static final int[] predefinedImages = {
             R.drawable.cat,  // Your predefined image resource
@@ -58,7 +69,13 @@ public class gallery extends AppCompatActivity {
             // Observe LiveData for updates to the picture list
             pictureViewModel.getAllPictures().observe(this, pictures -> {
                 if (pictures != null) {
+                    for (Picture picture : pictures) {
+                        Log.d("Gallery", "Picture Name: " + picture.name); // Replace 'getName' with your actual method to get the name
+                    }
                     imageAdapter.setPictures(pictures);
+                }
+                if(pictures.size()==0){
+                    openPredefinedImages();
                 }
             });
 
@@ -67,14 +84,55 @@ public class gallery extends AppCompatActivity {
             fabAddImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openPredefinedImages();
+                    openImageSelectorDialog();
                 }
             });
+
+
+            // Set up button to open the image selector dialog
+            Button sortButton = findViewById(R.id.sorter);
+            sortButton.setOnClickListener(v -> {
+                pictureViewModel.toggleSortOrder(); // Toggle sorting order
+                pictureViewModel.getAllPictures().observe(this, pictures -> {
+                    if (pictures != null) {
+                        imageAdapter.setPictures(pictures);
+                    }
+                });
+
+
+            });
+
 
 
         }
 
 
+
+
+    // Method to open the image selection dialog
+    private void openImageSelectorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an Image");
+
+        // Set predefined image names in the dialog
+        builder.setItems(imageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Get the selected image's URI
+                int selectedImageResId = predefinedImages[which];
+                Uri selectedImageUri = Uri.parse("android.resource://" + getPackageName() + "/" + selectedImageResId);
+
+                // Insert the selected image into the database
+                String selectedImageName = imageNames[which];
+                Picture newPicture = new Picture(selectedImageName, selectedImageUri.toString());
+                pictureViewModel.insert(newPicture);
+            }
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
 
@@ -84,7 +142,7 @@ public class gallery extends AppCompatActivity {
             Uri imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + imageResId);
 
             // You can use a default image name or any logic to name the image
-            String imageName = "Picture ";
+            String imageName = getResources().getResourceEntryName(imageResId);
 
             // Insert the new picture into the database
             Picture newPicture = new Picture(imageName, imageUri.toString());
@@ -92,4 +150,7 @@ public class gallery extends AppCompatActivity {
         }
     }
 
+
+
     }
+

@@ -54,6 +54,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.PictureViewH
         notifyDataSetChanged();
     }
 
+
+
     public interface OnDeleteClickListener {
         void onDeleteClick(Picture picture, int position);
     }
@@ -70,7 +72,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.PictureViewH
 
         public void bind(Picture picture, int position) {
             nameTextView.setText(picture.name);
-            // Load the image (using your preferred method, e.g., BitmapFactory, Glide, etc.)
+            // Load the image
             loadImageFromUri(picture.imageUri);
 
             // Set an OnClickListener for the imageView to show the dialog

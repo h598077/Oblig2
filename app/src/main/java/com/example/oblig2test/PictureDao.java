@@ -16,5 +16,12 @@ public interface PictureDao {
 
     @Query("SELECT * FROM pictures")
     LiveData<List<Picture>> getAllPictures();
+
+    // Sorting images alphabetically by name
+    @Query("SELECT * FROM pictures ORDER BY name ASC")
+    LiveData<List<Picture>> getAllPicturesSortedAsc();
+
+    @Query("SELECT * FROM pictures ORDER BY name DESC")
+    LiveData<List<Picture>> getAllPicturesSortedDesc();
 }
 

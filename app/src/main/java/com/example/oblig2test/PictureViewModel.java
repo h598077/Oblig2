@@ -9,12 +9,15 @@ import java.util.List;
 
 public class PictureViewModel extends AndroidViewModel {
     private final PictureRepository repository;
-    private final LiveData<List<Picture>> allPictures;
+    private  LiveData<List<Picture>> allPictures;
+    private boolean isAscending = true;
+
+
 
     public PictureViewModel(Application application) {
         super(application);
         repository = new PictureRepository(application);
-        allPictures = repository.getAllPictures();
+        allPictures = repository.getAllPicturesSortedAsc();
     }
 
     public LiveData<List<Picture>> getAllPictures() {
@@ -26,6 +29,16 @@ public class PictureViewModel extends AndroidViewModel {
     }
     public void delete(Picture picture) {
         repository.delete(picture);
+    }
+    public void toggleSortOrder() {
+        // Toggle sorting order and update the live data
+        isAscending = !isAscending;
+        if (isAscending) {
+            allPictures = repository.getAllPicturesSortedAsc();
+        } else {
+            allPictures = repository.getAllPicturesSortedDesc();
+        }
+
     }
 }
 

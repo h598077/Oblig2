@@ -8,23 +8,31 @@ import java.util.List;
 
 public class PictureRepository {
     private final PictureDao pictureDao;
-    private final LiveData<List<Picture>> allPictures;
+    private final LiveData<List<Picture>> allPicturesAsc;
+    private final LiveData<List<Picture>> allPicturesDesc;
 
     public PictureRepository(Application application) {
         PictureDatabase db = PictureDatabase.getDatabase(application);
         pictureDao = db.pictureDao();
-        allPictures = pictureDao.getAllPictures();
+        allPicturesAsc = pictureDao.getAllPicturesSortedAsc();
+        allPicturesDesc = pictureDao.getAllPicturesSortedDesc();
     }
 
-    public LiveData<List<Picture>> getAllPictures() {
-        return allPictures;
-    }
+
 
     public void insert(Picture picture) {
         new Thread(() -> pictureDao.insert(picture)).start();
     }
     public void delete(Picture picture) {
         new Thread(() -> pictureDao.delete(picture)).start();
+    }
+
+    public LiveData<List<Picture>> getAllPicturesSortedAsc() {
+        return allPicturesAsc;
+    }
+
+    public LiveData<List<Picture>> getAllPicturesSortedDesc() {
+        return allPicturesDesc;
     }
 }
 
