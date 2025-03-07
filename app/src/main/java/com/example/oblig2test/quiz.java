@@ -1,6 +1,7 @@
 package com.example.oblig2test;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -63,8 +64,10 @@ public class quiz extends AppCompatActivity {
                 startQuiz(currentPicture);
             }
         });
-
-
+        SharedPreferences prefs = getSharedPreferences("QuizPrefs", MODE_PRIVATE);
+        int savedScore = prefs.getInt("quiz_score", 0); // Default is 0 if no score is found
+        score=savedScore;
+        scoreView.setText("Score: " + savedScore);
     }
 
     private Picture getRandomPicture(List<Picture> pictures) {
@@ -126,6 +129,11 @@ public class quiz extends AppCompatActivity {
     }
 
     private void updateScore(){
+        SharedPreferences prefs = getSharedPreferences("QuizPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("quiz_score", score);
+        editor.apply();
+
         scoreView.setText("Score: " + score);
     }
 
