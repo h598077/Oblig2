@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Oblig2Test</string>
+        <string name="app_name">Oblig2Test</string>
+        <string name="option_1">Option 1</string>
+        <string name="option_2">Option 2</string>
+        <string name="option_3">Option 3</string>
+        <string name="riktig_svar">Riktig!</string>
+        <string name="feil_svar">Feil!</string>
+        <string name="quiz_image">Image</string>
+        <string name="score">Score: 0</string>
+
 </resources>
