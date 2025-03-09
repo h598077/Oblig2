@@ -47,20 +47,44 @@ public class AppTest {
     }
 
     @Test
-    public void testAppFunctionality() {
+    public void testgallery() {
         //
         // clicking a button in the main-menu (if you have one) takes you to the right sub-activity (i.e. to the Quiz or the Gallery; testing one button is enough);
         onView(withId(R.id.gallery)).perform(ViewActions.click());
 
-        // is the score updated correctly in the quiz (the test submits at least one right/wrong answer each and you check if the score is correct afterwards);
-        //
+
+        // test that checks that the number of registered pictures/persons is correct after adding/deleting an entry. For adding, use Intent Stubbing to return some image data (e.g. from the resource-folder) without any user interaction.
+
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("image_uri", "android.resource://com.example.oblig2test/drawable/cat"); // Example image URI
-        resultIntent.putExtra("image_name", "cat"); // Example image name
+        resultIntent.putExtra("image_uri", "android.resource://com.example.oblig2test/drawable/whale"); // Example image URI
+        resultIntent.putExtra("image_name", "whale"); // Example image name
         Intents.intending(IntentMatchers.hasComponent(gallery.class.getName()))
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, resultIntent));
-        //a test that checks that the number of registered pictures/persons is correct after adding/deleting an entry. For adding, use Intent Stubbing to return some image data (e.g. from the resource-folder) without any user interaction.
 
+
+
+    }
+
+
+    @Test
+    public void testquiz(){
+        // is the score updated correctly in the quiz (the test submits at least one right/wrong answer each and you check if the score is correct afterwards);
+        onView(withId(R.id.quiz)).perform(ViewActions.click());
+
+        String initialScoreText = "Score: 0";
+        onView(withId(R.id.scoreView)).check(matches(withText(initialScoreText)));
+
+
+        onView(withId(R.id.button1)).perform(ViewActions.click());
+
+
+        onView(withId(R.id.scoreView)).check(matches(withText("Score: 1")));
+
+
+        onView(withId(R.id.button2)).perform(ViewActions.click());
+
+
+        onView(withId(R.id.scoreView)).check(matches(withText("Score: 1")));
     }
 }
 
