@@ -42,9 +42,15 @@ public class gallery extends AppCompatActivity {
 
         private Context context;
 
-    final String[] imageNames = {"cat", "dog", "turkey"};
+    final String[] imageNames = {"cow", "whale", "pig"};
+    final String[] imageNames2 = {"cat", "dog", "turkey"};
 
     private static final int[] predefinedImages = {
+            R.drawable.cow,  // Your predefined image resource
+            R.drawable.whale,  // Your predefined image resource
+            R.drawable.pig   // Your predefined image resource
+    };
+    private static final int[] choseimage = {
             R.drawable.cat,  // Your predefined image resource
             R.drawable.dog,  // Your predefined image resource
             R.drawable.turkey   // Your predefined image resource
@@ -70,7 +76,7 @@ public class gallery extends AppCompatActivity {
             pictureViewModel.getAllPictures().observe(this, pictures -> {
                 if (pictures != null) {
                     for (Picture picture : pictures) {
-                        Log.d("Gallery", "Picture Name: " + picture.name); // Replace 'getName' with your actual method to get the name
+                        Log.d("Gallery", "Picture Name: " + picture.name);
                     }
                     imageAdapter.setPictures(pictures);
                 }
@@ -115,15 +121,15 @@ public class gallery extends AppCompatActivity {
         builder.setTitle("Choose an Image");
 
         // Set predefined image names in the dialog
-        builder.setItems(imageNames, new DialogInterface.OnClickListener() {
+        builder.setItems(imageNames2, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Get the selected image's URI
-                int selectedImageResId = predefinedImages[which];
+                int selectedImageResId = choseimage[which];
                 Uri selectedImageUri = Uri.parse("android.resource://" + getPackageName() + "/" + selectedImageResId);
 
                 // Insert the selected image into the database
-                String selectedImageName = imageNames[which];
+                String selectedImageName = imageNames2[which];
                 Picture newPicture = new Picture(selectedImageName, selectedImageUri.toString());
                 pictureViewModel.insert(newPicture);
             }
